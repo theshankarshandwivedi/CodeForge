@@ -4,11 +4,11 @@ require("dotenv").config();
 const app = express();
 
 app.use(express.json());
+
 const port = process.env.PORT || 3000;
 
 
-
-app.listen(port, (req, res) => {
+app.listen(port, () => {
     app.get("/", (req, res)=> {
         res.send("CodeForge is running");
     })
