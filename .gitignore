@@ -11,7 +11,9 @@ dist/
 build/
 
 # Env files
-.env
+*.env
+back/.env
+front/.env
 .env.local
 .env.*.local
 
@@ -19,3 +21,4 @@ build/
 .vscode/
 .idea/
 .DS_Store
+.env

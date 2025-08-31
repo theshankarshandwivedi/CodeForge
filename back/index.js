@@ -7,6 +7,8 @@ app.use(express.json());
 
 const port = process.env.PORT || 3000;
 
+const connectDB = require("./src/config/database");
+connectDB();
 
 app.listen(port, () => {
     app.get("/", (req, res)=> {
