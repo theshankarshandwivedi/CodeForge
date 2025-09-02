@@ -1,7 +1,7 @@
 
 
 const authenticate = (req, res, next) => {
-    // Middleware logic here
+    
     next();
 }
 

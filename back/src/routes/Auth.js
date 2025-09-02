@@ -5,7 +5,7 @@ const {registerUser, login, fetchUser} = require("../controllers/AuthController"
 const router = Router();
 
 router.post("/auth/register", authenticate, registerUser);
-// router.post("/auth/login", authenticate, login);
-// router.get("/auth/profile", authenticate, fetchUser);
+router.post("/auth/login", authenticate, login);
+router.get("/auth/profile", authenticate, fetchUser);
 
 module.exports = router;
