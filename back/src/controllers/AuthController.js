@@ -1,4 +1,6 @@
 const User = require("../models/User");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const registerUser = async (req, res) => {
 
@@ -10,7 +12,13 @@ const registerUser = async (req, res) => {
         }
 
         // Registration logic here
-        const user = { name, username, email, password };
+        const user = {};
+        const saltRounds = 10;
+        bcrypt.hash(password, saltRounds, function(err, hash){
+            user = { name, username, email, password: hash };
+        })
+
+        
 
         const response = await User.create(user);
 
@@ -27,12 +35,41 @@ const registerUser = async (req, res) => {
     }
 }
 
-const login = (req, res) => {
-    // Login logic here
+const login = async (req, res) => {
+    try{
+        const [email, password] = req.body;
+
+        if(!email || !password) {
+            return res.status(400).json({ error: "All fields are required" });
+        }
+
+        
+        const user = await User.findOne({ email });
+        const hash = user.password;
+
+        if(!user || !bcrypt.compareSync(password, hash)) {
+            return res.status(401).json({ error: "Invalid email or password" });
+        }else{
+            const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { algorithm: 'RS256', expiresIn: '1h' });
+        }
+
+        res.setHeader("Authorization", `Bearer ${token}`);
+        
+        return res.status(200).json({
+            success: "true",
+            message: "User logged in successfully"
+        });
+    } catch (error) {
+        console.error("Error logging in user:", error);
+        return res.status(500).json({
+            success: "false",
+            message: "Internal server error"
+        });
+    }
 }
 
 const fetchUser = (req, res) => {
-    // Fetch user logic here
+
 }
 
 module.exports = {
