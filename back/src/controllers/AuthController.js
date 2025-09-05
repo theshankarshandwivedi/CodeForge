@@ -68,8 +68,20 @@ const login = async (req, res) => {
     }
 }
 
-const fetchUser = (req, res) => {
+const fetchUser = async (req, res) => {
+    const [userId] = req.body;
 
+    //fetch user
+    const user = await User.findById(userId).select("-password");
+
+    if(!user) {
+        return res.status(404).json({ error: "User not found" });
+    }
+
+    return res.status(200).json({
+        success: true,
+        user
+    });
 }
 
 module.exports = {
