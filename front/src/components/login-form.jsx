@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 export function LoginForm({
   
@@ -25,16 +26,32 @@ export function LoginForm({
     password: password
   }
 
+  const navigate = useNavigate();
+
   const submitHandler = async (e) => {
     e.preventDefault();
     console.log(User);
-    const response = await fetch("http://localhost:3000/api/login", {
+    const response = await fetch("http://localhost:3000/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(User),
     });
+    if(response.status !== 200) {
+      const error = await response.json();
+      console.error("Login failed:", error);
+      return;
+    }
+    else{
+      const data = await response.json();
+      const header = response.headers.get("Authorization");
+      console.log("Login successful:", data);
+      console.log("Authorization header:", header);
+      // You can store the token in localStorage or cookies here if needed
+      localStorage.setItem("token", header.split(" ")[1]);
+      navigate("/home");
+    }
     console.log(response);
   };
 
@@ -76,7 +93,7 @@ export function LoginForm({
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <a href="#" className="underline underline-offset-4">
+              <a href="/register" className="underline underline-offset-4">
                 Sign up
               </a>
             </div>

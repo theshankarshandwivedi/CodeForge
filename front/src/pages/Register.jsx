@@ -29,7 +29,7 @@ const Register = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     console.log(User);
-    const response = await fetch("http://localhost:3000/api/register", {
+    const response = await fetch("http://localhost:3000/api/auth/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -37,6 +37,7 @@ const Register = () => {
       body: JSON.stringify(User),
     });
     console.log(response);
+    alert("Registration successful!");
   };
 
   return (
@@ -117,7 +118,7 @@ const Register = () => {
         <CardFooter>
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <a href="#" className="underline underline-offset-4">
+            <a href="/login" className="underline underline-offset-4">
               Login
             </a>
           </div>
