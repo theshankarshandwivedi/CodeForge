@@ -48,9 +48,11 @@ export function LoginForm({
       const header = response.headers.get("Authorization");
       console.log("Login successful:", data);
       console.log("Authorization header:", header);
+      const token = response.headers.get("Authorization");
+      console.log("Token:", token);
       // You can store the token in localStorage or cookies here if needed
       localStorage.setItem("token", header.split(" ")[1]);
-      navigate("/home");
+      navigate("/");
     }
     console.log(response);
   };
