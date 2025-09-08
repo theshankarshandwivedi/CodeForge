@@ -9,8 +9,9 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useState } from "react"
+import {  useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useAuth } from "@/context/AuthContext"
 
 export function LoginForm({
   
@@ -20,6 +21,7 @@ export function LoginForm({
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const login = useAuth().login;
 
   let User = {
     email: email,
@@ -49,6 +51,9 @@ export function LoginForm({
       console.log("Login successful:", data);
       console.log("Authorization header:", header);
       const token = response.headers.get("Authorization");
+      console.log("Token from header:", token);
+      console.log("User data:", data.user);
+      login(token, data.user);
       console.log("Token:", token);
       // You can store the token in localStorage or cookies here if needed
       localStorage.setItem("token", header.split(" ")[1]);

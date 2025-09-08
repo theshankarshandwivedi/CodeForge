@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
-
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   return (
     <header className="flex justify-between items-center px-8 py-4 border-b border-slate-800">
@@ -34,18 +35,34 @@ export default function Navbar() {
           Leaderboard
         </a>
       </nav>
-      <div className="space-x-2">
-        <Button onClick={() => {
-          navigate("/login");
-        }} variant="ghost" className="text-slate-300">
-          Login
-        </Button>
-        <Button onClick={() => {
-          navigate("/register");
-        }} className="bg-slate-700 hover:bg-slate-600">
-          Register
-        </Button>
-      </div>
+      {user ? (
+        <div className="space-x-2">
+          <Button onClick={logout} variant="ghost" className="text-slate-300">
+            Logout
+          </Button>
+        </div>
+      ) : (
+        <div className="space-x-2">
+          <Button
+            onClick={() => {
+              navigate("/login");
+              
+            }}
+            variant="ghost"
+            className="text-slate-300"
+          >
+            Login
+          </Button>
+          <Button
+            onClick={() => {
+              navigate("/register");
+            }}
+            className="bg-slate-700 hover:bg-slate-600"
+          >
+            Register
+          </Button>
+        </div>
+      )}
     </header>
   );
 }

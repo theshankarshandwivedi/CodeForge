@@ -70,6 +70,11 @@ const login = async (req, res) => {
     return res.status(200).json({
       success: "true",
       message: "User logged in successfully",
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+      },
     });
   } catch (error) {
     console.error("Error logging in user:", error);
