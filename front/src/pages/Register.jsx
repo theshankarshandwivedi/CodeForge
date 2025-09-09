@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { GoogleLogin } from "@react-oauth/google";
 
 
 const Register = () => {
@@ -25,6 +26,8 @@ const Register = () => {
     email: email,
     password: password,
   };
+
+  
 
   const submitHandler = async (e) => {
     e.preventDefault();

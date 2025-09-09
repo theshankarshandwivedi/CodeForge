@@ -85,6 +85,42 @@ const login = async (req, res) => {
   }
 };
 
+const googleLogin = async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { sub, email, name, picture } = payload;
+
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = new User({
+        googleId: sub,
+        email,
+        name,
+        avatar: picture,
+      });
+      await user.save();
+    }
+
+    const jwtToken = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: "1d" }
+    );
+
+    res.json({ token: jwtToken, user });
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ message: "Invalid Google token" });
+  }
+};
+
 const fetchUser = async (req, res) => {
   const [userId] = req.body;
 
@@ -105,4 +141,5 @@ module.exports = {
   registerUser,
   login,
   fetchUser,
+  googleLogin
 };
