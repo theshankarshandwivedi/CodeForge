@@ -88,7 +88,9 @@ const login = async (req, res) => {
 const googleLogin = async (req, res) => {
   try {
     const { token } = req.body;
+    console.log("Google token:", token);
 
+    // 1. Verify Google token
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
@@ -97,27 +99,32 @@ const googleLogin = async (req, res) => {
     const payload = ticket.getPayload();
     const { sub, email, name, picture } = payload;
 
+    // 2. Check if user exists
     let user = await User.findOne({ email });
+
     if (!user) {
-      user = new User({
-        googleId: sub,
-        email,
+      // 3. Create new user
+      user = await User.create({
         name,
+        username: email.split("@")[0],
+        email,
+        googleId: sub,
         avatar: picture,
+        provider: "Google",
       });
-      await user.save();
     }
 
-    const jwtToken = jwt.sign(
-      { id: user._id, email: user.email },
-      process.env.JWT_SECRET_KEY,
-      { expiresIn: "1d" }
+    // 4. Create JWT for our app
+    const appToken = jwt.sign(
+      { id: user._id, email: user.email, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
     );
 
-    res.json({ token: jwtToken, user });
-  } catch (error) {
-    console.error(error);
-    res.status(401).json({ message: "Invalid Google token" });
+    res.json({ token: appToken, user });
+  } catch (err) {
+    console.error(err);
+    res.status(401).json({ error: "Invalid Google token" });
   }
 };
 

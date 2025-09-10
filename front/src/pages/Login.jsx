@@ -13,11 +13,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { GoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 
 export default function LoginForm({ className, ...props }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const login = useAuth().login;
+  const { login } = useAuth();
 
   let User = {
     email: email,
@@ -26,25 +27,25 @@ export default function LoginForm({ className, ...props }) {
 
   const navigate = useNavigate();
 
-  const handleGoogleLoginSuccess = async (credentialResponse) => {
-    try {
-      const res = await fetch("http://localhost:3000/api/auth/google", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token: credentialResponse.credential }),
-      });
+  // const handleGoogleLoginSuccess = async (credentialResponse) => {
+  //   try {
+  //     const res = await fetch("http://localhost:3000/api/auth/google", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ token: credentialResponse.credential }),
+  //     });
 
-      const data = await res.json();
-      localStorage.setItem("token", data.token);
-      login(data.token, data.user);
-      alert("Google login successful!");
-      navigate("/");
-    } catch (err) {
-      console.error("Google Login Error:", err);
-    }
-  };
+  //     const data = await res.json();
+  //     localStorage.setItem("token", data.token);
+  //     login(data.token, data.user);
+  //     alert("Google login successful!");
+  //     navigate("/");
+  //   } catch (err) {
+  //     console.error("Google Login Error:", err);
+  //   }
+  // };
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -132,7 +133,20 @@ export default function LoginForm({ className, ...props }) {
                     </Button>
                     <Button variant="outline" className="w-full cursor-pointer">
                       <GoogleLogin
-                        onSuccess={handleGoogleLoginSuccess}
+                        onSuccess={async (credentialResponse) => {
+                          try {
+                            const { data } = await axios.post(
+                              "http://localhost:3000/api/auth/google",
+                              {
+                                token: credentialResponse.credential,
+                              }
+                            );
+
+                            login(data.user, data.token); // update AuthContext
+                          } catch (err) {
+                            console.error(err);
+                          }
+                        }}
                         onError={() => console.log("Login Failed")}
                       />
                     </Button>

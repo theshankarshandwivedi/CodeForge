@@ -7,15 +7,16 @@ const User = mongoose.Schema({
     },
     username:{
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password: {
         type: String,
-        required: true
     },
     googleId:{
         type: String,
@@ -38,5 +39,10 @@ const User = mongoose.Schema({
         default: "local"
     }
 }, {timestamps: true});
+
+User.index({ email: 1 });
+User.index({ googleId: 1 });
+User.index({ githubId: 1 });
+
 
 module.exports = mongoose.model("User", User);
