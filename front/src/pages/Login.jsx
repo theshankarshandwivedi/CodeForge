@@ -131,25 +131,26 @@ export default function LoginForm({ className, ...props }) {
                     >
                       Login
                     </Button>
-                    <Button variant="outline" className="w-full cursor-pointer">
-                      <GoogleLogin
-                        onSuccess={async (credentialResponse) => {
-                          try {
-                            const { data } = await axios.post(
-                              "http://localhost:3000/api/auth/google",
-                              {
-                                token: credentialResponse.credential,
-                              }
-                            );
 
-                            login(data.user, data.token); // update AuthContext
-                          } catch (err) {
-                            console.error(err);
-                          }
-                        }}
-                        onError={() => console.log("Login Failed")}
-                      />
-                    </Button>
+                    <GoogleLogin
+                      variant="outline"
+                      className="w-full cursor-pointer"
+                      onSuccess={async (credentialResponse) => {
+                        try {
+                          const { data } = await axios.post(
+                            "http://localhost:3000/api/auth/google",
+                            {
+                              token: credentialResponse.credential,
+                            }
+                          );
+
+                          login(data.user, data.token); // update AuthContext
+                        } catch (err) {
+                          console.error(err);
+                        }
+                      }}
+                      onError={() => console.log("Login Failed")}
+                    />
                   </div>
                 </div>
                 <div className="mt-4 text-center text-sm">
