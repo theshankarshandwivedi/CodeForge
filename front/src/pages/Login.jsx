@@ -27,25 +27,6 @@ export default function LoginForm({ className, ...props }) {
 
   const navigate = useNavigate();
 
-  // const handleGoogleLoginSuccess = async (credentialResponse) => {
-  //   try {
-  //     const res = await fetch("http://localhost:3000/api/auth/google", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ token: credentialResponse.credential }),
-  //     });
-
-  //     const data = await res.json();
-  //     localStorage.setItem("token", data.token);
-  //     login(data.token, data.user);
-  //     alert("Google login successful!");
-  //     navigate("/");
-  //   } catch (err) {
-  //     console.error("Google Login Error:", err);
-  //   }
-  // };
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -144,7 +125,9 @@ export default function LoginForm({ className, ...props }) {
                             }
                           );
 
-                          login(data.user, data.token); // update AuthContext
+                          login(data.token, data.user); // update AuthContext
+                          localStorage.setItem("token", data.token); // store token in localStorage
+                          navigate("/"); // redirect to home page
                         } catch (err) {
                           console.error(err);
                         }
