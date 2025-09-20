@@ -1,6 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -8,6 +17,7 @@ export default function Navbar() {
 
   return (
     <header className="flex justify-between items-center px-8 py-4 border-b border-slate-800">
+      {/* Logo */}
       <div className="flex items-center gap-4">
         <svg
           className="h-8 w-8 text-[var(--primary-color)]"
@@ -24,6 +34,8 @@ export default function Navbar() {
         </svg>
         <h1 className="text-2xl font-bold">CodeForge</h1>
       </div>
+
+      {/* Navigation Links */}
       <nav className="space-x-6 text-slate-300">
         <a href="/home" className="hover:text-white">
           Home
@@ -35,28 +47,50 @@ export default function Navbar() {
           Leaderboard
         </a>
       </nav>
+
+      {/* User Actions */}
       {user ? (
-        <div className="space-x-2">
-          <Button onClick={logout} variant="ghost" className="text-slate-300">
-            Logout
-          </Button>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Avatar className="cursor-pointer">
+              <AvatarImage src={user.avatar} alt={user.name} />
+              <AvatarFallback>
+                {user.name ? user.name[0].toUpperCase() : "U"}
+              </AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-48 bg-slate-800 text-slate-200 border border-slate-700">
+            <DropdownMenuLabel>{user.name || "User"}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => navigate("/profile")}>
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate("/settings")}>
+              Settings
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                logout();
+                navigate("/login");
+              }}
+              className="text-red-400 hover:text-red-300"
+            >
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       ) : (
         <div className="space-x-2">
           <Button
-            onClick={() => {
-              navigate("/login");
-              
-            }}
+            onClick={() => navigate("/login")}
             variant="ghost"
             className="text-slate-300"
           >
             Login
           </Button>
           <Button
-            onClick={() => {
-              navigate("/register");
-            }}
+            onClick={() => navigate("/register")}
             className="bg-slate-700 hover:bg-slate-600"
           >
             Register
