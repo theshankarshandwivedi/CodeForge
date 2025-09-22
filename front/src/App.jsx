@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
 import Home from './pages/Home'
 import ProtectedRoute from './components/ProtectedRoute'
+import Profile from './pages/Profile'
 
 // let loggedin = false;
 
@@ -29,6 +30,12 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        } />
+        
       </Routes>
     </Router>
   );
