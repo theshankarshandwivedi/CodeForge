@@ -21,7 +21,7 @@ const Hero = () => {
           </a>
           <a
             className="inline-flex items-center justify-center px-8 py-4 border border-[#475569] text-base font-medium rounded-lg text-[#f1f5f9] bg-transparent hover:bg-[#334155] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0d7ff2] transition-colors duration-200"
-            href="#"
+            href="/challenges"
           >
             Explore Challenges
           </a>

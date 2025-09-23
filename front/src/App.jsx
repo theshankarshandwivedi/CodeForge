@@ -9,7 +9,8 @@ import Dashboard from './pages/Dashboard'
 import Home from './pages/Home'
 import ProtectedRoute from './components/ProtectedRoute'
 import Profile from './pages/Profile'
-
+import Challenges from './pages/Challanges'
+import ChallengeDetails from './pages/ChallengeDetails'
 // let loggedin = false;
 
 function App() {
@@ -35,7 +36,13 @@ function App() {
             <Profile />
           </ProtectedRoute>
         } />
-        
+
+        <Route path="/challenges" element={<Challenges />} />
+        <Route path="/challenges/:id" element={
+          <ProtectedRoute>
+            <ChallengeDetails />
+          </ProtectedRoute>
+        } />
       </Routes>
     </Router>
   );
