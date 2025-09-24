@@ -2,9 +2,25 @@ import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Editor from "@monaco-editor/react";
 import { useState } from "react";
+import axios from "axios";
 
 export default function ChallengeDetails() {
   const { id } = useParams();
+
+  
+
+  const runCode = async () => {
+    try {
+      const response = await axios.post("http://localhost:3000/api/judge", {
+        source_code: "print('Hello World')",
+        language_id: 71, // Python
+        stdin: "",
+      });
+      console.log("Execution result:", response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   // Placeholder challenge
   const challenge = {
@@ -21,11 +37,6 @@ Output: [0,1]`,
   // State for editor
   const [language, setLanguage] = useState("javascript");
   const [code, setCode] = useState("// Write your solution here");
-
-  const handleRun = () => {
-    console.log("Running code:", code);
-    // later: send to backend (judge API) to evaluate
-  };
 
   return (
     <section className="px-6 py-12">
@@ -53,7 +64,7 @@ Output: [0,1]`,
           <option value="cpp">C++</option>
           <option value="java">Java</option>
         </select>
-        <Button onClick={handleRun} className="bg-slate-700 hover:bg-slate-600">
+        <Button onClick={runCode} className="bg-slate-700 hover:bg-slate-600">
           Run Code
         </Button>
       </div>
