@@ -7,18 +7,37 @@ import axios from "axios";
 export default function ChallengeDetails() {
   const { id } = useParams();
 
-  
+  const languageMap = {
+    javascript: 63, // Node.js 18.x
+    python: 71, // Python 3.11
+    cpp: 54, // C++ (GCC 13.2.0)
+    java: 62, // Java (OpenJDK 17)
+    c: 50, // C (GCC 13.2.0)
+  };
+
+  const [stdin, setStdin] = useState("");
 
   const runCode = async () => {
     try {
       const response = await axios.post("http://localhost:3000/api/judge", {
-        source_code: "print('Hello World')",
-        language_id: 71, // Python
-        stdin: "",
+        source_code: code, // `code` should be the state where your editor stores code
+        language_id: languageMap[language], // Map selected language
+        stdin: stdin || "", // optional input if you add testcases
       });
+
+      if (response.data.stdout) {
+        setOutput(response.data.stdout);
+      } else if (response.data.stderr) {
+        setOutput(response.data.stderr);
+      } else if (response.data.compile_output) {
+        setOutput(response.data.compile_output);
+      } else {
+        setOutput("No output received.");
+      }
+
       console.log("Execution result:", response.data);
     } catch (error) {
-      console.error(error);
+      console.error("Error running code:", error);
     }
   };
 
@@ -35,8 +54,9 @@ Output: [0,1]`,
   };
 
   // State for editor
-  const [language, setLanguage] = useState("javascript");
+  const [language, setLanguage] = useState("C++");
   const [code, setCode] = useState("// Write your solution here");
+  const [output, setOutput] = useState("");
 
   return (
     <section className="px-6 py-12">
@@ -59,10 +79,11 @@ Output: [0,1]`,
           onChange={(e) => setLanguage(e.target.value)}
           className="bg-slate-800 text-slate-200 px-3 py-2 rounded-md border border-slate-700"
         >
-          <option value="javascript">JavaScript</option>
-          <option value="python">Python</option>
+          <option value="c">C</option>
           <option value="cpp">C++</option>
           <option value="java">Java</option>
+          <option value="python">Python</option>
+          <option value="javascript">JavaScript</option>
         </select>
         <Button onClick={runCode} className="bg-slate-700 hover:bg-slate-600">
           Run Code
@@ -81,6 +102,20 @@ Output: [0,1]`,
             fontSize: 14,
           }}
         />
+      </div>
+      <div className="mt-4">
+        <h3 className="text-slate-900 mb-2 font-bold">Custom Input (stdin)</h3>
+        <textarea
+          value={stdin}
+          onChange={(e) => setStdin(e.target.value)}
+          placeholder="Enter input for your program"
+          className="w-full h-24 bg-slate-800 text-slate-200 p-3 rounded-md border border-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-600"
+        />
+      </div>
+
+      <div className="mt-4 p-4 bg-slate-900 border border-slate-700 rounded-md text-slate-200">
+        <h3 className="font-semibold mb-2">Output:</h3>
+        <pre className="whitespace-pre-wrap">{output}</pre>
       </div>
     </section>
   );
