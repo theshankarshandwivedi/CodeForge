@@ -36,7 +36,7 @@ export default function Navbar() {
       </div>
 
       {/* Navigation Links */}
-      <nav className="space-x-6 text-slate-300">
+      <nav className="space-x-6 text-slate-300 flex items-center">
         <a href="/home" className="hover:text-white">
           Home
         </a>
@@ -46,11 +46,17 @@ export default function Navbar() {
         <a href="/leaderboard" className="hover:text-white">
           Leaderboard
         </a>
-      </nav>
 
-      {user?.role === "Admin" && (
-        <Button onClick={() => navigate("/admin")}>Admin Panel</Button>
-      )}
+        {/* Admin Panel Button */}
+        {user?.role === "Admin" && (
+          <Button
+            onClick={() => navigate("/admin")}
+            className="bg-slate-700 hover:bg-slate-600 ml-4"
+          >
+            Admin Panel
+          </Button>
+        )}
+      </nav>
 
       {/* User Actions */}
       {user ? (
