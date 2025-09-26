@@ -48,6 +48,10 @@ export default function Navbar() {
         </a>
       </nav>
 
+      {user?.role === "Admin" && (
+        <Button onClick={() => navigate("/admin")}>Admin Panel</Button>
+      )}
+
       {/* User Actions */}
       {user ? (
         <DropdownMenu>

@@ -2,6 +2,9 @@ const express = require("express")
 const router = require("./src/routes/Auth");
 const cors = require("cors");
 require("dotenv").config();
+const problemRoutes = require("./src/routes/Problem");
+const hackathonRoutes = require("./src/routes/Hackathon");
+
 
 const app = express();
 app.use(
@@ -13,6 +16,11 @@ app.use(
 );
 
 app.use(express.json());
+
+// Routes
+
+app.use("/api/problems", problemRoutes);
+app.use("/api/hackathons", hackathonRoutes);
 app.use("/api", router);
 
 
