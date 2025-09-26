@@ -2,7 +2,7 @@ const express = require("express")
 const router = require("./src/routes/Auth");
 const cors = require("cors");
 require("dotenv").config();
-const problemRoutes = require("./src/routes/Problem");
+const problemRoutes = require("./src/routes/Problems");
 const hackathonRoutes = require("./src/routes/Hackathon");
 
 

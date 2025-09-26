@@ -1,4 +1,4 @@
-const { Router } = require("express");
+const express = require("express");
 const {authenticate} = require("../middlewares/authMiddleware")
 const {
   registerUser,
@@ -8,7 +8,7 @@ const {
 } = require("../controllers/AuthController");
 const {judge} = require("../controllers/JudgeController");
 
-const router = Router();
+const router = express.Router();
 
 router.post("/auth/register", registerUser);
 router.post("/auth/login", login);
