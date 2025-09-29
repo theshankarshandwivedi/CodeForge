@@ -4,11 +4,35 @@ const e = require("express");
 
 exports.createHackathon = async (req, res) => {
   try {
-    const hackathon = new Hackathon(req.body);
-    await hackathon.save();
-    res.status(201).json(hackathon);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const {
+      title,
+      description,
+      startTime,
+      endTime,
+      challenges,
+      rules,
+      prizes,
+      status,
+      maxParticipants,
+    } = req.body;
+
+    const newHackathon = new Hackathon({
+      title,
+      description,
+      startTime,
+      endTime,
+      challenges,
+      rules,
+      prizes,
+      status,
+      maxParticipants,
+      createdBy: req.user.id, // 👈 comes from token middleware
+    });
+
+    await newHackathon.save();
+    res.status(201).json(newHackathon);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
 
