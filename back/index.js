@@ -31,7 +31,7 @@ const port = process.env.PORT || 3000;
 const connectDB = require("./src/config/database");
 connectDB();
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0',() => {
     app.get("/", (req, res)=> {
         res.send("CodeForge is running");
     })
